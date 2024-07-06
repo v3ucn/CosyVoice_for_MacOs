@@ -10,9 +10,9 @@ For `SenseVoice`, visit [SenseVoice repo](https://github.com/FunAudioLLM/SenseVo
 
 - Clone the repo
 ``` sh
-git clone --recursive https://github.com/FunAudioLLM/CosyVoice.git
+git clone https://github.com/v3ucn/CosyVoice_for_MacOs.git
 # If you failed to clone submodule due to network failures, please run following command until success
-cd CosyVoice
+cd CosyVoice_for_MacOs
 ```
 
 - Install Conda: please see https://docs.conda.io/en/latest/miniconda.html
@@ -77,6 +77,7 @@ Please see the demo website for details.
 # change speech_tts/CosyVoice-300M-SFT for sft inference, or speech_tts/CosyVoice-300M-Instruct for instruct inference
 python3 webui.py --port 50000 --model_dir speech_tts/CosyVoice-300M
 ```
+<img width="1810" alt="test" src="https://github.com/v3ucn/CosyVoice_for_MacOs/assets/1288038/4915189c-9263-41de-9c5f-5666eacf918f">
 
 
 **Advanced Usage**
