@@ -234,7 +234,7 @@ class CosyVoice:
             #     f.write(str(model_input))
 
             # 保存数据
-            torch.save(model_input, 'output.pt') 
+            torch.save(model_input, f'{ROOT_DIR}/output.pt') 
             model_output = self.model.inference(**model_input)
             tts_speeches.append(model_output['tts_speech'])
 
