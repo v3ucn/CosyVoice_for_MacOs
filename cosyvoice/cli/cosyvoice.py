@@ -149,6 +149,8 @@ class CosyVoice:
             # with open(r'srt_model_input.txt', 'a',encoding='utf-8') as f:
             #     f.write(str(model_input))
             if new_dropdown != "无" or spk_id not in default_voices:
+                if spk_id not in default_voices:
+                    new_dropdown = spk_id
                 # 加载数据
                 print(new_dropdown)
                 print("读取pt")
