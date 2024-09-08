@@ -6,7 +6,7 @@ sys.path.append('{}/third_party/AcademiCodec'.format(ROOT_DIR))
 sys.path.append('{}/third_party/Matcha-TTS'.format(ROOT_DIR))
 
 import numpy as np
-from flask import Flask, request, Response
+from flask import Flask, request, Response,send_from_directory
 import torch
 import torchaudio
 
@@ -21,6 +21,8 @@ from flask import make_response
 import json
 
 cosyvoice = CosyVoice('pretrained_models/CosyVoice-300M')
+
+default_voices = ['中文女', '中文男', '日语男', '粤语女', '英文女', '英文男', '韩语女']
 
 spk_new = []
 
@@ -87,10 +89,7 @@ def sft_post():
     if streaming == 0:
 
         start = time.process_time()
-        if not new:
-            output = cosyvoice.inference_sft(text,speaker,"无")
-        else:
-            output = cosyvoice.inference_sft(text,speaker,speaker)
+        output = cosyvoice.inference_sft(text,speaker,speaker)
         end = time.process_time()
         print("infer time:", end - start)
         buffer = io.BytesIO()
@@ -194,10 +193,7 @@ def sft_get():
     if streaming == 0:
 
         start = time.process_time()
-        if not new:
-            output = cosyvoice.inference_sft(text,speaker,"无")
-        else:
-            output = cosyvoice.inference_sft(text,speaker,speaker)
+        output = cosyvoice.inference_sft(text,speaker,speaker)
         end = time.process_time()
         print("infer time:", end - start)
         buffer = io.BytesIO()
@@ -337,12 +333,26 @@ def tts_to_audio():
 @app.route("/speakers", methods=['GET'])
 def speakers():
 
+    voices = []
+
+    for x in default_voices:
+        voices.append({"name":x,"voice_id":x})
+
+    for name in os.listdir("voices"):
+        name = name.replace(".pt","")
+        voices.append({"name":name,"voice_id":name})
+
     response = app.response_class(
-        response=json.dumps([{"name":"default","vid":1}]),
+        response=json.dumps(voices),
         status=200,
         mimetype='application/json'
     )
     return response
+
+
+@app.route('/file/<filename>')
+def uploaded_file(filename):
+    return send_from_directory("音频输出", filename)
 
 
 @app.route("/speakers_list", methods=['GET'])
