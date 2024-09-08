@@ -1,4 +1,20 @@
-# CosyVoice for mac
+# 启动接口服务
+
+python3 api.py
+
+```
+url接口地址: http://localhost:9880/?text=测试测试，这里是测试&speaker=中文女
+```
+
+```
+字幕文件地址:http://localhost:9880/file/output.srt
+```
+
+```
+音频文件地址:http://localhost:9880/file/output.wav
+```
+
+# CosyVoice
 ## 👉🏻 [CosyVoice Demos](https://fun-audio-llm.github.io/) 👈🏻
 [[CosyVoice Paper](https://fun-audio-llm.github.io/pdf/CosyVoice_v1.pdf)][[CosyVoice Studio](https://www.modelscope.cn/studios/iic/CosyVoice-300M)][[CosyVoice Code](https://github.com/FunAudioLLM/CosyVoice)]
 
@@ -10,23 +26,52 @@ For `SenseVoice`, visit [SenseVoice repo](https://github.com/FunAudioLLM/SenseVo
 
 - Clone the repo
 ``` sh
-git clone https://github.com/v3ucn/CosyVoice_for_MacOs.git
+git clone --recursive https://github.com/v3ucn/CosyVoice_For_Windows.git
 # If you failed to clone submodule due to network failures, please run following command until success
-cd CosyVoice_for_MacOs
+cd CosyVoice_For_Windows
+git submodule update --init --recursive
 ```
 
 - Install Conda: please see https://docs.conda.io/en/latest/miniconda.html
 - Create Conda env:
 
 ``` sh
-conda create -n cosyvoice python=3.8
+conda create -n cosyvoice python=3.11
 conda activate cosyvoice
 pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --trusted-host=mirrors.aliyun.com
 
-brew install sox
+install deepspeed from https://github.com/S95Sedan/Deepspeed-Windows/releases/tag/v14.0%2Bpy311
+
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# when you in windows
+no need to install sox 
 ```
 
+**Model download**
+
+We strongly recommand that you download our pretrained `CosyVoice-300M` `CosyVoice-300M-SFT` `CosyVoice-300M-Instruct` model and `speech_kantts_ttsfrd` resource.
+
+If you are expert in this field, and you are only interested in training your own CosyVoice model from scratch, you can skip this step.
+
+``` python
+# SDK模型下载
+from modelscope import snapshot_download
+snapshot_download('iic/CosyVoice-300M', local_dir='pretrained_models/CosyVoice-300M')
+snapshot_download('iic/CosyVoice-300M-SFT', local_dir='pretrained_models/CosyVoice-300M-SFT')
+snapshot_download('iic/CosyVoice-300M-Instruct', local_dir='pretrained_models/CosyVoice-300M-Instruct')
+snapshot_download('speech_tts/speech_kantts_ttsfrd', local_dir='pretrained_models/speech_kantts_ttsfrd')
 ```
+
+``` sh
+# git模型下载，请确保已安装git lfs
+mkdir -p pretrained_models
+git clone https://www.modelscope.cn/iic/CosyVoice-300M.git pretrained_models/CosyVoice-300M
+git clone https://www.modelscope.cn/iic/CosyVoice-300M-SFT.git pretrained_models/CosyVoice-300M-SFT
+git clone https://www.modelscope.cn/iic/CosyVoice-300M-Instruct.git pretrained_models/CosyVoice-300M-Instruct
+git clone https://www.modelscope.cn/speech_tts/speech_kantts_ttsfrd.git pretrained_models/speech_kantts_ttsfrd
+```
+
 
 **Basic Usage**
 
@@ -36,7 +81,7 @@ For instruct inference, please use `CosyVoice-300M-Instruct` model.
 First, add `third_party/AcademiCodec` and `third_party/Matcha-TTS` to your `PYTHONPATH`.
 
 ``` sh
-export PYTHONPATH=third_party/AcademiCodec:third_party/Matcha-TTS
+set PYTHONPATH=third_party/AcademiCodec;third_party/Matcha-TTS
 ```
 
 ``` python
@@ -75,9 +120,9 @@ Please see the demo website for details.
 
 ``` python
 # change speech_tts/CosyVoice-300M-SFT for sft inference, or speech_tts/CosyVoice-300M-Instruct for instruct inference
-python3 webui.py --port 50000 --model_dir speech_tts/CosyVoice-300M
+python3 webui.py --port 9886 --model_dir ./pretrained_models/CosyVoice-300M
 ```
-<img width="1810" alt="test" src="https://github.com/v3ucn/CosyVoice_for_MacOs/assets/1288038/4915189c-9263-41de-9c5f-5666eacf918f">
+![PixPin_2024-07-07_15-00-18](https://github.com/v3ucn/CosyVoice_For_Windows/assets/1288038/7c6fa726-050a-4d54-9973-fe8c6a284ef3)
 
 
 **Advanced Usage**
